@@ -45,17 +45,13 @@ def zillow_data(advanced=False):
         if os.path.isfile(filename):
             return pd.read_csv(filename)  # Returns local file if there is one
         else:
-            query = '''SELECT id, parcelid, bathroomcnt, bedroomcnt, calculatedbathnbr, calculatedfinishedsquarefeet, 
-            finishedsquarefeet12, fips, fullbathcnt, latitude, longitude, lotsizesquarefeet, propertycountylandusecode, 
-            propertylandusetypeid, rawcensustractandblock,regionidcity, regionidcounty, regionidzip, roomcnt, yearbuilt, 
-            structuretaxvaluedollarcnt, taxvaluedollarcnt, assessmentyear, landtaxvaluedollarcnt,taxamount, 
-            censustractandblock 
-            FROM predictions_2017 as pre
-                JOIN properties_2017 USING(id)
-            WHERE SUBSTR(transactiondate, 1, 4) = 2017 AND propertylandusetypeid = 261'''  # SQL query
+            query = '''SELECT bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet, taxvaluedollarcnt, poolcnt, 
+            garagecarcnt, fireplacecnt, fips, yearbuilt, lotsizesquarefeet
+            FROM properties_2017 JOIN predictions_2017 USING(id)
+            WHERE SUBSTR(transactiondate, 1, 4) = 2017 AND propertylandusetypeid = 261'''  # SQL query'''  # SQL query
             url = get_connection('zillow')  # Creates url to connect to server
             df = pd.read_sql(query, url)  # Queries data
-            df = df.dropna()
-            df.to_csv(filename, index=False)  # Saves data locally
+            # df = df.dropna()
+            # df.to_csv(filename, index=False)  # Saves data locally
             return df  # returns queried data
 

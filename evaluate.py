@@ -24,24 +24,27 @@ def eval_p(p_value):  # create a function that checks p-value for a significant 
 
 
 def eval_pearson_r(r_value):
-    if r_value > 0.90:
-        print(f'There is a very high positive correlation. R-value was {round(r_value,2)}.')
-    elif r_value > 0.70:
-        print(f'There is a high positive correlation. R-value was {round(r_value,2)}.')
-    elif r_value > 0.50:
-        print(f'There is a moderate positive correlation. R-value was {round(r_value,2)}.')
-    elif r_value > 0.25:
-        print(f'There is a low positive correlation. R-value was {round(r_value,2)}.')
+    """This function will evaluate Pearson's R."""
+    if r_value >= 0.90:
+        print(f'There is a very high positive correlation. R-value was {round(r_value,3)}.')
+    elif r_value >= 0.70:
+        print(f'There is a high positive correlation. R-value was {round(r_value,3)}.')
+    elif r_value >= 0.40:
+        print(f'There is a moderate positive correlation. R-value was {round(r_value,3)}.')
+    elif r_value >= 0.20:
+        print(f'There is a low positive correlation. R-value was {round(r_value,3)}.')
     elif r_value > 0.00:
-        print(f'There is a very slight positive correlation. R-value was {round(r_value,2)}.')
-    elif r_value > -0.25:
-        print(f'There is a very slight negative correlation. R-value was {round(r_value,2)}.')
-    elif r_value > -0.50:
-        print(f'There is a low negative correlation. R-value was {round(r_value,2)}.')
-    elif r_value > -0.70:
-        print(f'There is a moderate negative correlation. R-value was {round(r_value,2)}.')
-    elif r_value > -0.90:
-        print(f'There is a high negative correlation. R-value was {round(r_value,2)}.')
+        print(f'There is a very slight positive correlation. R-value was {round(r_value,3)}.')
+    elif r_value == 0.00:
+        print(f'There is no correlation. R-value was {round(r_value,3)}.')
+    elif r_value >= -0.20:
+        print(f'There is a very slight negative correlation. R-value was {round(r_value,3)}.')
+    elif r_value >= -0.40:
+        print(f'There is a low negative correlation. R-value was {round(r_value,3)}.')
+    elif r_value >= -0.70:
+        print(f'There is a moderate negative correlation. R-value was {round(r_value,3)}.')
+    elif r_value >= -0.90:
+        print(f'There is a high negative correlation. R-value was {round(r_value,3)}.')
     else:
         print(f'There is a very high negative correlation. R-value was {round(r_value, 2)}.')
 
@@ -53,6 +56,8 @@ def check_pearson(r, p):
 
 
 def check_ttest(t, p, tails=1):
+    """This function will accept the t, and p-value from a T-test and analyze it. It will accordingly divide the p-value
+    by 2 if this is a one-tailed test."""
     alpha = 0.05
     if tails == 1:
         if p / 2 > alpha:
@@ -71,32 +76,36 @@ def check_ttest(t, p, tails=1):
 
 
 def baseline(data, actual='', method='both'):
-    df = data.copy()
-    if method == 'mean':
+    """This function will create a baseline. It accepts a dataframe and then returns one or two baseline models."""
+    df = data.copy()  # Creates a copy of dataframe
+    if method == 'mean':  # Creates a baseline model using mean()
         df['baseline'] = df[actual].mean()
         return df
-    elif method == 'median':
+    elif method == 'median':  # Creates a baseline model using median()
         df['baseline'] = df[actual].median()
         return df
-    elif method == 'both':
+    elif method == 'both':  # Creates a baseline model using both
         df['base_median'] = df[actual].median()
         df['base_mean'] = df[actual].mean()
-        return df
+        return df  # Returns dataframe with the baseline models
 
 
 def eval_model(actual, model):
+    """This function will accept two series of the model and actual data and calculate the metrics for the model."""
     residuals = model - actual
     SSE = (residuals ** 2).sum()
     MSE = SSE / len(actual)
     RMSE = sqrt(MSE)
-    return SSE, MSE, RMSE
+    return SSE, MSE, RMSE  # Returns the calculated metrics
 
 
 def train_model(model, X_train, y_train, X_val, y_val):
-    model.fit(X_train, y_train)
-    train_preds = model.predict(X_train)
-    skip, skip2, train_rmse = eval_model(y_train, train_preds)
-    val_preds = model.predict(X_val)
-    skip3, skip4, val_rmse = eval_model(y_val, val_preds)
+    """This function accepts a model object, and the x and y train and validate dataframes. It will fit, predict, and
+    evaluate the models on train and validate."""
+    model.fit(X_train, y_train)  # Fits the model to the train data
+    train_preds = model.predict(X_train)  # Create predictions for train
+    skip, skip2, train_rmse = eval_model(y_train, train_preds)  # Caculate RMSE for model on train
+    val_preds = model.predict(X_val)  # Creates predictions for validate
+    skip3, skip4, val_rmse = eval_model(y_val, val_preds)  # Caculate RMSE for model on validate
     print(f'The train RMSE is {train_rmse}.')
     print(f'The validate RMSE is {val_rmse}.')

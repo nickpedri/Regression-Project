@@ -9,14 +9,14 @@ def sql_query(db='None', query='None'):
      This function takes in two arguments: db which is the database that you wish to connect/use, and query which is the
     query that you would like to run."""
 
-    if db == 'None':
+    if db == 'None':  # Will alert you that no database was specified
         print('Database not specified.')
-    elif query == 'None':
+    elif query == 'None':  # Will alert you that no query was specified
         print('No query!')
     else:
         db_url = get_connection(db)
         df = pd.read_sql(query, db_url)
-        return df
+        return df  # Returns df from the query that was input
 
 
 def zillow_data(advanced=False):
@@ -48,10 +48,9 @@ def zillow_data(advanced=False):
             query = '''SELECT bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet, taxvaluedollarcnt, poolcnt, 
             garagecarcnt, fireplacecnt, fips, yearbuilt, lotsizesquarefeet
             FROM properties_2017 JOIN predictions_2017 USING(id)
-            WHERE SUBSTR(transactiondate, 1, 4) = 2017 AND propertylandusetypeid = 261'''  # SQL query'''  # SQL query
+            WHERE SUBSTR(transactiondate, 1, 4) = 2017 AND propertylandusetypeid = 261'''  # SQL query
             url = get_connection('zillow')  # Creates url to connect to server
             df = pd.read_sql(query, url)  # Queries data
-            # df = df.dropna()
-            # df.to_csv(filename, index=False)  # Saves data locally
+            df.to_csv(filename, index=False)  # Saves data locally
             return df  # returns queried data
 

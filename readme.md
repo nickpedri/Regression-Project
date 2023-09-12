@@ -44,10 +44,16 @@ MVP:
 
 | Feature    |              Description                  |
 | --------   |               -------                     |
+| price      |   The price of the house                  |
 | bedrooms   |   The number of bedrooms in the house     |
 | bathrooms  |   The number of bathrooms in the house    |
 | sq_ft      |   The square footage of the house         |
-
+| pools      |   The number of pools in the house        |
+| fireplaces |   The number of fireplaces in the house   |
+| garages    |   The square garages of the house         |
+| fips       |   The name of the county the house is in  |
+| year       |   The year the house was built in         |
+| lot_sq_ft  |   The square footage of the lot           |
 
 # Instructions
 
@@ -61,3 +67,7 @@ MVP:
 
 
 # Key Findings
+
+Houses become more expensive with an increase number of amenities. More rooms, such as bathrooms and bedrooms, had a positive relationship with prices. House and lot size (sq ft) also had a positive correlation with house prices.
+
+Models had little variation in scores. Some were better than others but not by huge margins. Adjusting hyperparameters had little effect. It seems that the best way to improve scores would be to input better data into the models. I created an MVP using just sq ft, bedrooms, and bathrooms and it did much worse. The extra data really helped the model perform better.

@@ -1,5 +1,7 @@
 from math import sqrt
 
+import pandas as pd
+
 """
 Cheat sheet for stats tests:
 
@@ -75,24 +77,25 @@ def check_ttest(t, p, tails=1):
         print(f'T-value was less than 0. With a value of {round(t,2)}.')
 
 
-def baseline(data, actual='', method='both'):
+def baseline(data, method='both'):
     """This function will create a baseline. It accepts a dataframe and then returns one or two baseline models."""
-    df = data.copy()  # Creates a copy of dataframe
+    df = pd.DataFrame(data)  # Creates a copy of dataframe
+
     if method == 'mean':  # Creates a baseline model using mean()
-        df['baseline'] = df[actual].mean()
+        df['baseline'] = data.mean()
         return df
     elif method == 'median':  # Creates a baseline model using median()
-        df['baseline'] = df[actual].median()
+        df['baseline'] = data.median()
         return df
     elif method == 'both':  # Creates a baseline model using both
-        df['base_median'] = df[actual].median()
-        df['base_mean'] = df[actual].mean()
+        df['base_median'] = data.median()
+        df['base_mean'] = data.mean()
         return df  # Returns dataframe with the baseline models
 
 
 def eval_model(actual, model):
     """This function will accept two series of the model and actual data and calculate the metrics for the model."""
-    residuals = model - actual
+    residuals = model - actual  # Calculate residuals
     SSE = (residuals ** 2).sum()
     MSE = SSE / len(actual)
     RMSE = sqrt(MSE)

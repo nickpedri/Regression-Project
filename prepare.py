@@ -103,8 +103,7 @@ def scale(df='?', train=None, val=None, test=None, method='mms', scaled_cols=Non
     if train is None or val is None or test is None:
         train, val, test = train_val_test(df)
     if scaled_cols is None:
-        scaled_cols = ['bedrooms', 'bathrooms', 'sq_ft', 'pools', 'garages',
-                       'fireplaces', 'year', 'lot_sq_ft']
+        scaled_cols = ['bedrooms', 'bathrooms', 'sq_ft', 'year', 'lot_sq_ft']
     if method == 'mms':  # MinMax is chosen
         mms = MinMaxScaler()
         mms.fit(train[scaled_cols])
@@ -133,3 +132,18 @@ def split_xy(df, target=''):
     x_df = df.drop(columns=target)
     y_df = df[target]
     return x_df, y_df  # Returns dataframe
+
+
+def dummies(train, val, test, drop_first, normal_list):
+    """This function will one hot encode a dataframe. It accepts one or more dataframes, and two lists of columns."""
+
+    train = pd.get_dummies(train, columns=drop_first)  # Drops first value from this list of columns
+    train = pd.get_dummies(train, columns=normal_list)  # Does not drop first from this list of columns
+
+    val = pd.get_dummies(val, columns=drop_first)
+    val = pd.get_dummies(val, columns=normal_list)
+
+    test = pd.get_dummies(test, columns=drop_first)
+    test = pd.get_dummies(test, columns=normal_list)
+
+    return train, val, test  # Returns encoded dataframes
